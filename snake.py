@@ -5,16 +5,14 @@ class Snake:
         self.dir = (0, -1)
 
     def set_dir(self, direction):
-        if direction == 'up':
+        if direction == 'UP':
             self.dir = (0, -1)
-        elif direction == 'down':
+        elif direction == 'DOWN':
             self.dir = (0, 1)
-        elif direction == 'right':
+        elif direction == 'RIGHT':
             self.dir = (1, 0)
-        elif direction == 'left':
+        elif direction == 'LEFT':
             self.dir = (-1, 0)
-        else:
-            raise Exception
 
     def move(self):
 

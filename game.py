@@ -1,8 +1,25 @@
 import os
 from time import sleep
 
+from pynput.keyboard import Listener, Key
+
 from board import Board
 from snake import Snake
+
+
+direction = None
+
+
+def on_press(key):
+    global direction
+    if key == Key.up:
+        direction = 'UP'
+    if key == Key.down:
+        direction = 'DOWN'
+    if key == Key.right:
+        direction = 'RIGHT'
+    if key == Key.left:
+        direction = 'LEFT'
 
 
 def clear_console():
@@ -24,14 +41,11 @@ class Game:
         self.snake_speed = snake_speed
         sleep(1)
 
-    def on_press(key):
-        pass
-
     def start(self):
-
         while True:
             self.timer += 1
             if self.timer % self.snake_speed == 0:
+                self.snake.set_dir(direction)
                 self.snake.move()
                 self.board.update(self.snake)
 
