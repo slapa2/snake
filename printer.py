@@ -35,6 +35,11 @@ class Printer:
             for line in score.readlines():
                 self.score_str += line
 
+        self.space_str = ''
+        with open('assets/space.txt', 'r') as space:
+            for line in space.readlines():
+                self.space_str += line
+
         self.numbers = {
             '1': '',
             '2': '',
@@ -79,22 +84,22 @@ class Printer:
         print(self.logo_str)
 
     def print_score(self, score):
-        print(self.score_str)
-        print(self.get_number_str(score))
+        print(self._concatenate_chars([
+            self.score_str, self.space_str, self.get_number_str(score)
+        ]))
 
     def get_number_str(self, number):
         score_arr = [x for x in str(number)]
         score_str_arr = [self.numbers[x] for x in score_arr]
-        score_str_split_arr = [self._split_str(x) for x in score_str_arr]
-        return self._concatenate_chars(score_str_split_arr)
+        return self._concatenate_chars(score_str_arr)
 
     @staticmethod
     def _split_str(string):
         return string.split('\n')
 
-    @staticmethod
-    def _concatenate_chars(array):
-        zip_arr = zip(*array)
+    def _concatenate_chars(self, array):
+        str_split_arr = [self._split_str(x) for x in array]
+        zip_arr = zip(*str_split_arr)
         joined_lines = [''.join(x) for x in zip_arr]
         return '\n'.join(joined_lines)
 
