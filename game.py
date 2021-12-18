@@ -3,10 +3,11 @@ from time import sleep
 
 from pynput.keyboard import Key
 
-from board import Board, print_colours_bar
+from board import Board
 from snake import Snake
 from apple import Apple
-
+from colours import print_colours_bar
+from printer import Printer
 
 direction = "UP"
 blocked_keyboard = False
@@ -28,22 +29,14 @@ def on_press(key):
         blocked_keyboard = True
 
 
-def clear_console():
-    command = 'clear'
-    if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
-        command = 'cls'
-    os.system(command)
-
-
 class Game:
 
     def __init__(self, fps, x, y, snake_speed, snake_length):
-        clear_console()
-        self.logo = ''
-        with open('assets/logo.txt', 'r') as logo:
-            for line in logo.readlines():
-                self.logo += line
-        print('\n\n\n\n\n', self.logo)
+        self.printer = Printer()
+        # self.printer.print_all_numbers()
+        self.printer.clear_console()
+        self.printer.print_logo()
+
         self.delay = 1/fps
         self.board = Board(x, y)
         self.snake = Snake(snake_length, int(x/2), int(y/2))
@@ -88,22 +81,25 @@ class Game:
             self.snake.move()
             self.board.update(self.snake, self.apple)
             if self.check_self_bite():
-                print('you bit yourself')
+                self.printer.clear_console()
+                self.printer.print_bit()
+                self.printer.print_score(self.points)
                 break
             if self.check_hit_border():
-                print('you hit the border')
+                self.printer.clear_console()
+                self.printer.print_crashed()
+                self.printer.print_score(self.points)
                 break
             if self.check_apple():
+                self.printer.clear_console()
                 self.points += self.apples
                 self.apples += 1
                 self.apple.create(self.board)
                 self.snake.add_module()
                 self.board.update(self.snake, self.apple)
 
-            clear_console()
-            print(
-                f'jabłko: {self.apples} \tpunkty: {self.points}\trozmiar: {len(self.snake.body)}'
-            )
-            print(self.board.render())
+            self.printer.clear_console()
+            self.printer.print_score_tab(self.apples, self.points, len(self.snake.body))
+            self.printer.print_board(self.board)
             print_colours_bar()
             sleep(self.delay)
