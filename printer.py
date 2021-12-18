@@ -93,9 +93,6 @@ class Printer:
         joined_lines = [''.join(x) for x in zip_arr]
         return '\n'.join(joined_lines)
 
-    def print_logo(self):
-        print(self.logo_str)
-
     def print_score(self, score):
         print(self._concatenate_chars([
             self.score_str, self.space_str, self._get_number_str(score)
@@ -110,22 +107,11 @@ class Printer:
         score_str_arr = [self.numbers[x] for x in score_arr]
         return self._concatenate_chars(score_str_arr)
 
-    def print_crashed(self):
-        print(self.crashed_str)
-
-    def print_game_over(self):
-        print(self.game_over_str)
-
-    def print_bit(self):
-        print(self.bit_str)
-
     def print_all_numbers(self):
         for number in self.numbers.values():
             clear_console()
             print(number)
             time.sleep(1)
 
-    def print_menu(self):
-        print(self.menu_str)
 
 

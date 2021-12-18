@@ -63,7 +63,7 @@ class Game:
 
         for i in reversed(range(1, 3)):
             clear_console()
-            self.printer.print_logo()
+            print(self.printer.logo_str)
             self.printer.print_number(i)
             sleep(1)
 
@@ -108,12 +108,12 @@ class Game:
     def end_game(self, reason):
         sleep(1)
         clear_console()
-        self.printer.print_game_over()
+        print(self.printer.game_over_str)
         if reason == 'crashed':
-            self.printer.print_crashed()
+            print(self.printer.crashed_str)
             self.printer.print_score(self.points)
         elif reason == 'bit':
-            self.printer.print_bit()
+            print(self.printer.bit_str)
             self.printer.print_score(self.points)
         self.menu()
 
@@ -145,8 +145,7 @@ class Game:
             sleep(self.delay)
 
     def menu(self):
-        self.printer.print_menu()
-        sleep(1)
+        print(self.printer.menu_str)
         selected = input('select option and pres Enter: ')
         while True:
             if selected == '1':
