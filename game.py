@@ -1,10 +1,11 @@
 import os
 from time import sleep
 
-from pynput.keyboard import Listener, Key
+from pynput.keyboard import Key
 
 from board import Board
 from snake import Snake
+from apple import Apple
 
 
 direction = None
@@ -39,15 +40,14 @@ class Game:
         self.snake = Snake(snake_length, int(x/2), int(y/2))
         self.timer = 0
         self.snake_speed = snake_speed
+        self.apple = Apple(self.board)
         sleep(1)
 
     def start(self):
         while True:
-            self.timer += 1
-            if self.timer % self.snake_speed == 0:
-                self.snake.set_dir(direction)
-                self.snake.move()
-                self.board.update(self.snake)
+            self.snake.set_dir(direction)
+            self.snake.move()
+            self.board.update(self.snake, self.apple)
 
             clear_console()
             self.board.print()
