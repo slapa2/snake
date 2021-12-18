@@ -61,7 +61,7 @@ class Printer:
     @staticmethod
     def print_score_tab(apples, points, snake_len):
         print(
-            f'apple: {apples} \tpoints: {points}\tsnake length: {snake_len}'
+            f'apples: {apples} \tpoints: {points}\tsnake length: {snake_len}'
         )
 
     @staticmethod
@@ -92,10 +92,14 @@ class Printer:
 
     def print_score(self, score):
         print(self._concatenate_chars([
-            self.score_str, self.get_number_str(score)
+            self.score_str, self.space_str, self._get_number_str(score)
         ]))
 
-    def get_number_str(self, number):
+    def print_number(self, number):
+        print(self._concatenate_chars(
+            [self.space_str for _ in range(26)] + [self._get_number_str(number)]))
+
+    def _get_number_str(self, number):
         score_arr = [x for x in str(number)]
         score_str_arr = [self.numbers[x] for x in score_arr]
         return self._concatenate_chars(score_str_arr)

@@ -32,20 +32,22 @@ def on_press(key):
 class Game:
 
     def __init__(self, fps, x, y, snake_speed, snake_length):
-        self.printer = Printer()
-        # self.printer.print_all_numbers()
-        self.printer.clear_console()
-        self.printer.print_logo()
-
         self.delay = 1/fps
         self.board = Board(x, y)
         self.snake = Snake(snake_length, int(x/2), int(y/2))
         self.timer = 0
-        self.apples = 1
+        self.apple_counter = 1
         self.points = 0
         self.snake_speed = snake_speed
         self.apple = Apple(self.board)
-        sleep(1)
+        self.printer = Printer()
+        # self.printer.print_all_numbers()
+        for i in reversed(range(1, 4)):
+            self.printer.clear_console()
+            self.printer.print_logo()
+            self.printer.print_number(i)
+            sleep(1)
+
 
     def check_self_bite(self):
         head = self.snake.body[0]
@@ -92,14 +94,14 @@ class Game:
                 break
             if self.check_apple():
                 self.printer.clear_console()
-                self.points += self.apples
-                self.apples += 1
+                self.points += self.apple_counter
+                self.apple_counter += 1
                 self.apple.create(self.board)
                 self.snake.add_module()
                 self.board.update(self.snake, self.apple)
 
             self.printer.clear_console()
-            self.printer.print_score_tab(self.apples, self.points, len(self.snake.body))
+            self.printer.print_score_tab(self.apple_counter - 1, self.points, len(self.snake.body))
             self.printer.print_board(self.board)
             print_colours_bar()
             sleep(self.delay)
