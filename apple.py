@@ -1,11 +1,16 @@
-from random import randint
+from random import randint, choice, seed
 from board import EMPTY, APPLE
+
+from board import colours
 
 
 class Apple:
 
     def __init__(self, board):
-        self.x, self.y = self.create(board)
+        self.x = None
+        self.y = None
+        self.colour = None
+        self.create(board)
 
     def create(self, board):
         pos_x, pos_y = None, None
@@ -17,4 +22,5 @@ class Apple:
                 board.board[pos_x][pos_y] = APPLE
                 created = True
         self.x, self.y = pos_x, pos_y
-        return pos_x, pos_y
+        seed()
+        self.colour = choice(list(colours.values()))

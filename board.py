@@ -1,10 +1,14 @@
-from random import randint
+import random
 
-W = '\033[0m'   # white (normal)
-R = '\033[31m'  # red
-G = '\033[32m'  # green
-B = '\033[34m'  # blue
-P = '\033[35m'  # purple
+colours = {
+    'W': '\033[0m',  # white (normal)
+    'R': '\033[31m',  # red
+    'G': '\033[32m',  # green
+    'Y': '\033[33m',  # yellow
+    # 'B': '\033[34m',  # blue
+    'M': '\033[35m',  # magenta
+    # 'C': '\033[36m',  # cyan
+}
 
 EMPTY = '  '
 TOP_CORNER = '_'
@@ -12,13 +16,20 @@ BOTTOM_CORNER = '|'
 SIDE = '|'
 TOP = '__'
 BOTTOM = '__'
-SNAKE = f'{G}██{W}'
-APPLE = f'{R}██{W}'
+SNAKE = f'{colours["G"]}██{colours["W"]}'
+APPLE = '██'
+
+
+def print_colours_bar():
+    for key, colour in colours.items():
+        print(f'{colour}██{colours["W"]}', end='')
+    print()
 
 
 class Board:
 
     def __init__(self, rows, cols):
+        random.seed()
         self.rows = rows
         self.cols = cols
 
@@ -56,11 +67,9 @@ class Board:
         ):
             raise Exception
 
-        self.board[apple.x][apple.y] = APPLE
+        self.board[apple.x][apple.y] = f'{apple.colour}{APPLE}{colours["W"]}'
         for module in snake.body:
             self.board[module[1]][module[0]] = SNAKE
-
-
 
     def render(self):
         render = ''
@@ -69,7 +78,3 @@ class Board:
                 render += col
             render += '\n'
         return render
-
-    def print(self):
-        print(self.render())
-        # print(self.board)

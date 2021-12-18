@@ -4,7 +4,7 @@ import threading
 
 
 def game_t():
-    game = Game(8, 40, 40, 2, 5)
+    game = Game(8, 30, 30, 2, 5)
     game.start()
 
 

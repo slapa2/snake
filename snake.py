@@ -22,3 +22,6 @@ class Snake:
             else:
                 self.body[i] = tuple(map(lambda a, b: a + b, self.body[i], self.dir))
 
+    def add_module(self):
+        self.body.append(self.body[-1])
+
