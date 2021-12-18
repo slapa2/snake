@@ -1,4 +1,3 @@
-import os
 from time import sleep
 
 from pynput.keyboard import Key
@@ -7,15 +6,17 @@ from board import Board
 from snake import Snake
 from apple import Apple
 from colours import print_colours_bar
-from printer import Printer
+from printer import Printer, clear_console
 
 direction = "UP"
 blocked_keyboard = False
+menu = True
 
 
 def on_press(key):
     global direction
     global blocked_keyboard
+    global menu
 
     if not blocked_keyboard:
         if key == Key.up and direction != 'DOWN':
@@ -32,22 +33,39 @@ def on_press(key):
 class Game:
 
     def __init__(self, fps, x, y, snake_speed, snake_length):
-        self.delay = 1/fps
-        self.board = Board(x, y)
-        self.snake = Snake(snake_length, int(x/2), int(y/2))
-        self.timer = 0
-        self.apple_counter = 1
-        self.points = 0
-        self.snake_speed = snake_speed
-        self.apple = Apple(self.board)
+
         self.printer = Printer()
         # self.printer.print_all_numbers()
-        for i in reversed(range(1, 4)):
-            self.printer.clear_console()
+        self.delay = 1 / fps
+        self.snake_speed = snake_speed
+        self.board_size = (x, y)
+        self.snake_length = snake_length
+        self.board = None
+        self.snake = None
+        self.apple_counter = None
+        self.points = None
+        self.apple = None
+
+    def new_game(self):
+        self.board = None
+        self.snake = None
+        self.apple_counter = None
+        self.points = None
+        self.apple = None
+        self.apple_counter = 1
+        self.points = 0
+
+        self.board = Board(*self.board_size)
+        self.snake = Snake(
+            self.snake_length,
+            int(self.board_size[0] / 2), int(self.board_size[1] / 2))
+        self.apple = Apple(self.board)
+
+        for i in reversed(range(1, 3)):
+            clear_console()
             self.printer.print_logo()
             self.printer.print_number(i)
             sleep(1)
-
 
     def check_self_bite(self):
         head = self.snake.body[0]
@@ -72,36 +90,71 @@ class Game:
             self.snake.body[0][0] == self.apple.y and
             self.snake.body[0][1] == self.apple.x
         ):
+            clear_console()
+            self.points += self.apple_counter
+            self.apple_counter += 1
+            self.apple.create(self.board)
+            self.snake.add_module()
+            self.board.update(self.snake, self.apple)
             return True
         return False
 
+    def refresh_board(self):
+        clear_console()
+        self.printer.print_score_tab(self.apple_counter - 1, self.points, len(self.snake.body))
+        self.printer.print_board(self.board)
+        print_colours_bar()
+
+    def end_game(self, reason):
+        sleep(1)
+        clear_console()
+        self.printer.print_game_over()
+        if reason == 'crashed':
+            self.printer.print_crashed()
+            self.printer.print_score(self.points)
+        elif reason == 'bit':
+            self.printer.print_bit()
+            self.printer.print_score(self.points)
+        self.menu()
+
     def start(self):
+        global blocked_keyboard
+
+        self.new_game()
+
         while True:
-            global blocked_keyboard
+
             blocked_keyboard = False
             self.snake.set_dir(direction)
+
             self.snake.move()
             self.board.update(self.snake, self.apple)
-            if self.check_self_bite():
-                self.printer.clear_console()
-                self.printer.print_bit()
-                self.printer.print_score(self.points)
-                break
-            if self.check_hit_border():
-                self.printer.clear_console()
-                self.printer.print_crashed()
-                self.printer.print_score(self.points)
-                break
-            if self.check_apple():
-                self.printer.clear_console()
-                self.points += self.apple_counter
-                self.apple_counter += 1
-                self.apple.create(self.board)
-                self.snake.add_module()
-                self.board.update(self.snake, self.apple)
 
-            self.printer.clear_console()
-            self.printer.print_score_tab(self.apple_counter - 1, self.points, len(self.snake.body))
-            self.printer.print_board(self.board)
-            print_colours_bar()
+            if self.check_self_bite():
+                self.end_game('bit')
+                return
+
+            if self.check_hit_border():
+                self.end_game('crashed')
+                return
+
+            self.check_apple()
+
+            self.refresh_board()
+
             sleep(self.delay)
+
+    def menu(self):
+        self.printer.print_menu()
+        sleep(1)
+        selected = input('select option and pres Enter: ')
+        while True:
+            if selected == '1':
+                self.start()
+                continue
+            elif selected == '2':
+                return
+            elif selected == '0':
+                return
+            else:
+                selected = input('wrong option try again: ')

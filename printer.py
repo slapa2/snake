@@ -1,6 +1,14 @@
 import os
 import time
 
+
+def clear_console():
+    command = 'clear'
+    if os.name in ('nt', 'dos'):
+        command = 'cls'
+    os.system(command)
+
+
 class Printer:
 
     def __init__(self):
@@ -40,6 +48,11 @@ class Printer:
             for line in space.readlines():
                 self.space_str += line
 
+        self.menu_str = ''
+        with open('assets/menu.txt', 'r') as menu:
+            for line in menu.readlines():
+                self.menu_str += line
+
         self.numbers = {
             '1': '',
             '2': '',
@@ -74,13 +87,6 @@ class Printer:
         print(render)
 
     @staticmethod
-    def clear_console():
-        command = 'clear'
-        if os.name in ('nt', 'dos'):
-            command = 'cls'
-        os.system(command)
-
-    @staticmethod
     def _concatenate_chars(array):
         str_split_arr = [x.split('\n') for x in array]
         zip_arr = zip(*str_split_arr)
@@ -105,15 +111,21 @@ class Printer:
         return self._concatenate_chars(score_str_arr)
 
     def print_crashed(self):
-        print(self.game_over_str)
         print(self.crashed_str)
 
-    def print_bit(self):
+    def print_game_over(self):
         print(self.game_over_str)
+
+    def print_bit(self):
         print(self.bit_str)
 
     def print_all_numbers(self):
         for number in self.numbers.values():
-            self.clear_console()
+            clear_console()
             print(number)
             time.sleep(1)
+
+    def print_menu(self):
+        print(self.menu_str)
+
+
