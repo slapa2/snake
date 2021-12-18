@@ -80,28 +80,25 @@ class Printer:
             command = 'cls'
         os.system(command)
 
+    @staticmethod
+    def _concatenate_chars(array):
+        str_split_arr = [x.split('\n') for x in array]
+        zip_arr = zip(*str_split_arr)
+        joined_lines = [''.join(x) for x in zip_arr]
+        return '\n'.join(joined_lines)
+
     def print_logo(self):
         print(self.logo_str)
 
     def print_score(self, score):
         print(self._concatenate_chars([
-            self.score_str, self.space_str, self.get_number_str(score)
+            self.score_str, self.get_number_str(score)
         ]))
 
     def get_number_str(self, number):
         score_arr = [x for x in str(number)]
         score_str_arr = [self.numbers[x] for x in score_arr]
         return self._concatenate_chars(score_str_arr)
-
-    @staticmethod
-    def _split_str(string):
-        return string.split('\n')
-
-    def _concatenate_chars(self, array):
-        str_split_arr = [self._split_str(x) for x in array]
-        zip_arr = zip(*str_split_arr)
-        joined_lines = [''.join(x) for x in zip_arr]
-        return '\n'.join(joined_lines)
 
     def print_crashed(self):
         print(self.game_over_str)
