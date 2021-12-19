@@ -32,9 +32,7 @@ def on_press(key=None):
 class Game:
 
     def __init__(self, fps, x, y, snake_speed, snake_length):
-
         self.printer = Printer()
-        # self.printer.print_all_numbers()
         self.delay = 1 / fps
         self.snake_speed = snake_speed
         self.board_size = (x, y)
@@ -118,29 +116,20 @@ class Game:
 
     def start(self):
         global blocked_keyboard
-
         self.new_game()
-
         while True:
-
             blocked_keyboard = False
             self.snake.set_dir(direction)
-
             self.snake.move()
             self.board.update(self.snake, self.apple)
-
             if self.check_self_bite():
                 self.end_game('bit')
                 return
-
             if self.check_hit_border():
                 self.end_game('crashed')
                 return
-
             self.check_apple()
-
             self.refresh_board()
-
             sleep(self.delay)
 
     def menu(self):

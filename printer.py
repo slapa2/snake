@@ -9,67 +9,29 @@ def clear_console():
     os.system(command)
 
 
+def get_str_form_file(file):
+    string = ''
+    with open(f'{file}', 'r') as f:
+        for line in f.readlines():
+            string += line
+    return string
+
+
 class Printer:
 
     def __init__(self):
 
-        self.logo_str = '\n\n\n\n\n'
-        with open('assets/logo.txt', 'r') as logo:
-            for line in logo.readlines():
-                self.logo_str += line
+        self.logo_str = '\n\n\n\n\n' + get_str_form_file('assets/logo.txt')
+        self.bit_str = get_str_form_file('assets/bit.txt')
+        self.crashed_str = get_str_form_file('assets/crashed.txt')
+        self.game_over_str = '\n\n' + get_str_form_file('assets/game_over.txt')
+        self.score_str = get_str_form_file('assets/score.txt')
+        self.space_str = get_str_form_file('assets/space.txt')
+        self.menu_str = get_str_form_file('assets/menu.txt')
 
-        self.bit_str = ''
-        with open('assets/bit.txt', 'r') as bit:
-            for line in bit.readlines():
-                self.bit_str += line
-
-        self.bit_str = ''
-        with open('assets/bit.txt', 'r') as bit:
-            for line in bit.readlines():
-                self.bit_str += line
-
-        self.crashed_str = ''
-        with open('assets/crashed.txt', 'r') as crashed:
-            for line in crashed.readlines():
-                self.crashed_str += line
-
-        self.game_over_str = '\n\n'
-        with open('assets/game_over.txt', 'r') as game_over:
-            for line in game_over.readlines():
-                self.game_over_str += line
-
-        self.score_str = ''
-        with open('assets/score.txt', 'r') as score:
-            for line in score.readlines():
-                self.score_str += line
-
-        self.space_str = ''
-        with open('assets/space.txt', 'r') as space:
-            for line in space.readlines():
-                self.space_str += line
-
-        self.menu_str = ''
-        with open('assets/menu.txt', 'r') as menu:
-            for line in menu.readlines():
-                self.menu_str += line
-
-        self.numbers = {
-            '1': '',
-            '2': '',
-            '3': '',
-            '4': '',
-            '5': '',
-            '6': '',
-            '7': '',
-            '8': '',
-            '9': '',
-            '0': '',
-        }
-
+        self.numbers = {x: '' for x in range(10)}
         for number in self.numbers:
-            with open(f'assets/{number}.txt', 'r') as f:
-                for line in f.readlines():
-                    self.numbers[number] += line
+            self.numbers[number] = get_str_form_file(f'assets/{number}.txt')
 
     @staticmethod
     def print_score_tab(apples, points, snake_len):
@@ -107,11 +69,6 @@ class Printer:
         score_str_arr = [self.numbers[x] for x in score_arr]
         return self._concatenate_chars(score_str_arr)
 
-    def print_all_numbers(self):
-        for number in self.numbers.values():
-            clear_console()
-            print(number)
-            time.sleep(1)
 
 
 
