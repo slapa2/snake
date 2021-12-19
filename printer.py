@@ -29,7 +29,7 @@ class Printer:
         self.space_str = get_str_form_file('assets/space.txt')
         self.menu_str = get_str_form_file('assets/menu.txt')
 
-        self.numbers = {x: '' for x in range(10)}
+        self.numbers = {str(x): '' for x in range(10)}
         for number in self.numbers:
             self.numbers[number] = get_str_form_file(f'assets/{number}.txt')
 

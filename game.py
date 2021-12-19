@@ -1,5 +1,5 @@
 from time import sleep
-from pynput.keyboard import Key
+from pynput.keyboard import Key, Listener
 
 from board import Board
 from snake import Snake
@@ -9,7 +9,6 @@ from printer import Printer, clear_console
 
 direction = "UP"
 blocked_keyboard = False
-menu = True
 
 
 def on_press(key=None):
@@ -112,7 +111,6 @@ class Game:
         elif reason == 'bit':
             print(self.printer.bit_str)
             self.printer.print_score(self.points)
-        self.menu()
 
     def start(self):
         global blocked_keyboard
@@ -133,15 +131,26 @@ class Game:
             sleep(self.delay)
 
     def menu(self):
-        print(self.printer.menu_str)
-        selected = input('select option and pres Enter: ')
-        while True:
-            if selected == '1':
-                self.start()
-                continue
-            elif selected == '2':
-                return
-            elif selected == '0':
-                return
-            else:
-                selected = input('wrong option try again: ')
+        with Listener(on_press=on_press) as listener:
+            while True:
+                print(self.printer.menu_str)
+                selected = input('Select option and pres Enter: ')[-1]
+                if selected == '1':
+                    self.start()
+                    continue
+                elif selected == '2':
+                    return
+                elif selected == '0':
+                    return
+                else:
+                    print('Wrong option try again!')
+
+
+def main():
+    game = Game(8, 30, 30, 2, 5)
+    game.menu()
+
+
+if __name__ == '__main__':
+    main()
+
