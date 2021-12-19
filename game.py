@@ -1,5 +1,4 @@
 from time import sleep
-
 from pynput.keyboard import Key
 
 from board import Board
@@ -13,10 +12,10 @@ blocked_keyboard = False
 menu = True
 
 
-def on_press(key):
+def on_press(key=None):
+
     global direction
     global blocked_keyboard
-    global menu
 
     if not blocked_keyboard:
         if key == Key.up and direction != 'DOWN':
