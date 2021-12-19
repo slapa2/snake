@@ -4,6 +4,7 @@ from pynput.keyboard import Key, Listener
 from board import Board
 from snake import Snake
 from apple import Apple
+import results
 from colours import print_colours_bar
 from printer import Printer, clear_console
 
@@ -107,10 +108,10 @@ class Game:
         print(self.printer.game_over_str)
         if reason == 'crashed':
             print(self.printer.crashed_str)
-            self.printer.print_score(self.points)
         elif reason == 'bit':
             print(self.printer.bit_str)
-            self.printer.print_score(self.points)
+        self.printer.print_score(self.points)
+        results.save_result(self.points)
 
     def start(self):
         global blocked_keyboard
@@ -139,7 +140,8 @@ class Game:
                     self.start()
                     continue
                 elif selected == '2':
-                    return
+                    clear_console()
+                    results.print_results(5)
                 elif selected == '0':
                     return
                 else:
