@@ -28,6 +28,7 @@ class Printer:
         self.score_str = get_str_form_file('assets/score.txt')
         self.space_str = get_str_form_file('assets/space.txt')
         self.menu_str = get_str_form_file('assets/menu.txt')
+        self.best_scores = get_str_form_file('assets/best_scores.txt')
 
         self.numbers = {str(x): '' for x in range(10)}
         for number in self.numbers:
