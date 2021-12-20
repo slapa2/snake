@@ -8,6 +8,7 @@ import results
 from colours import print_colours_bar
 from printer import Printer, clear_console
 
+
 direction = "UP"
 blocked_keyboard = False
 
@@ -27,6 +28,23 @@ def on_press(key=None):
         if key == Key.left and direction != 'RIGHT':
             direction = 'LEFT'
         blocked_keyboard = True
+
+
+def menu(game):
+    with Listener(on_press=on_press) as listener:
+        while True:
+            print(game.printer.menu_str)
+            selected = input('Select option and pres Enter: ')[-1]
+            if selected == '1':
+                game.start()
+                continue
+            elif selected == '2':
+                clear_console()
+                results.print_results(5)
+            elif selected == '0':
+                return
+            else:
+                print('Wrong option try again!')
 
 
 class Game:
@@ -63,6 +81,24 @@ class Game:
             print(self.printer.logo_str)
             self.printer.print_number(i)
             sleep(1)
+
+    def start(self):
+        global blocked_keyboard
+        self.new_game()
+        while True:
+            blocked_keyboard = False
+            self.snake.set_dir(direction)
+            self.snake.move()
+            self.board.update(self.snake, self.apple)
+            if self.check_self_bite():
+                self.end_game('bit')
+                return
+            if self.check_hit_border():
+                self.end_game('crashed')
+                return
+            self.check_apple()
+            self.refresh_board()
+            sleep(self.delay)
 
     def check_self_bite(self):
         head = self.snake.body[0]
@@ -113,44 +149,10 @@ class Game:
         self.printer.print_score(self.points)
         results.save_result(self.points)
 
-    def start(self):
-        global blocked_keyboard
-        self.new_game()
-        while True:
-            blocked_keyboard = False
-            self.snake.set_dir(direction)
-            self.snake.move()
-            self.board.update(self.snake, self.apple)
-            if self.check_self_bite():
-                self.end_game('bit')
-                return
-            if self.check_hit_border():
-                self.end_game('crashed')
-                return
-            self.check_apple()
-            self.refresh_board()
-            sleep(self.delay)
-
-    def menu(self):
-        with Listener(on_press=on_press) as listener:
-            while True:
-                print(self.printer.menu_str)
-                selected = input('Select option and pres Enter: ')[-1]
-                if selected == '1':
-                    self.start()
-                    continue
-                elif selected == '2':
-                    clear_console()
-                    results.print_results(5)
-                elif selected == '0':
-                    return
-                else:
-                    print('Wrong option try again!')
-
 
 def main():
     game = Game(8, 30, 30, 2, 5)
-    game.menu()
+    menu(game)
 
 
 if __name__ == '__main__':

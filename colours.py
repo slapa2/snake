@@ -13,3 +13,4 @@ def print_colours_bar():
     for key, colour in colours.items():
         print(f'{colour}██{colours["W"]}', end='')
     print()
+
