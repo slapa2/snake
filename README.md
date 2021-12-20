@@ -1,7 +1,7 @@
 # snake
 Simple snake console game
 
-## instalation
+## installation
 
  1. Run commands:
 
